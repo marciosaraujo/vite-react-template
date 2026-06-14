@@ -12,10 +12,6 @@ repo can be public while the key stays private — a clean pattern for putting A
 behind your own internal API, the kind of "model gateway" a DevOps/SRE team would
 actually run.
 
-Built by **Márcio Araújo** (DevOps/SRE) ·
-[marcio@marcioaraujo.net](mailto:marcio@marcioaraujo.net) ·
-[github.com/marciosaraujo](https://github.com/marciosaraujo)
-
 ## Features
 
 - React SPA with three pages: **Home**, **Playground**, **Architecture** —

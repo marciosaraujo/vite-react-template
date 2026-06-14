@@ -1,0 +1,5 @@
+# Local secrets for `wrangler dev`. Copy to `.dev.vars` (gitignored) and fill in.
+# Each variable here should also be declared as a binding in wrangler.json so it
+# shows up on the typed `Env` after running `npm run cf-typegen`.
+
+# EXAMPLE_SECRET="your-value-here"

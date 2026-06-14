@@ -1,5 +1,7 @@
 # Local secrets for `wrangler dev`. Copy to `.dev.vars` (gitignored) and fill in.
-# Each variable here should also be declared as a binding in wrangler.json so it
-# shows up on the typed `Env` after running `npm run cf-typegen`.
+# `npm run cf-typegen` picks up the keys here/in .dev.vars and adds them to the
+# typed `Env`. In production set this with: `wrangler secret put GOOGLE_AI_API_KEY`.
 
-# EXAMPLE_SECRET="your-value-here"
+# Google AI Studio (Gemini) API key. Backend-only secret — never expose to the
+# frontend, never commit the real value, never use a VITE_* variable for this.
+GOOGLE_AI_API_KEY="your-google-ai-studio-key"

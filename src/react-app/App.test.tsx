@@ -1,12 +1,37 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
-import {
-	render,
-	screen,
-	fireEvent,
-	waitFor,
-	cleanup,
-} from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import App from "./App";
+
+beforeEach(() => {
+	// Default: API calls resolve to empty-but-valid envelopes so the Playground
+	// can mount without network errors.
+	vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+		const url = String(input);
+		if (url.includes("/api/models")) {
+			return new Response(
+				JSON.stringify({
+					success: true,
+					data: { models: [] },
+					error: null,
+					requestId: "t",
+				}),
+			);
+		}
+		return new Response(
+			JSON.stringify({
+				success: true,
+				data: {
+					name: "AI Gateway Edge",
+					defaultModel: "gemini-2.5-flash",
+					maxMessageLength: 8000,
+					temperature: { min: 0, max: 2, default: 0.4 },
+				},
+				error: null,
+				requestId: "t",
+			}),
+		);
+	});
+});
 
 afterEach(() => {
 	cleanup();
@@ -14,25 +39,38 @@ afterEach(() => {
 });
 
 describe("App", () => {
-	it("increments the counter on click", () => {
+	it("renders the home hero by default", () => {
 		render(<App />);
-		const btn = screen.getByLabelText("increment");
-		expect(btn).toHaveTextContent("count is 0");
-		fireEvent.click(btn);
-		expect(btn).toHaveTextContent("count is 1");
+		expect(
+			screen.getByRole("heading", { level: 1, name: "AI Gateway Edge" }),
+		).toBeInTheDocument();
+		expect(
+			screen.getByRole("link", { name: /Open the Playground/i }),
+		).toBeInTheDocument();
 	});
 
-	it("fetches the name from the API and displays it", async () => {
-		vi.spyOn(globalThis, "fetch").mockResolvedValue(
-			new Response(JSON.stringify({ name: "Test" })),
-		);
+	it("shows the global navigation", () => {
 		render(<App />);
-		const btn = screen.getByLabelText("get name");
-		expect(btn).toHaveTextContent("Name from API is: unknown");
-		fireEvent.click(btn);
+		expect(
+			screen.getByRole("link", { name: "Playground" }),
+		).toBeInTheDocument();
+		expect(
+			screen.getByRole("link", { name: "Architecture" }),
+		).toBeInTheDocument();
+	});
+
+	it("renders the playground when navigated to /playground", async () => {
+		window.history.pushState({}, "", "/playground");
+		render(<App />);
+		expect(
+			screen.getByRole("heading", { level: 1, name: "Playground" }),
+		).toBeInTheDocument();
 		await waitFor(() =>
-			expect(btn).toHaveTextContent("Name from API is: Test"),
+			expect(globalThis.fetch).toHaveBeenCalledWith(
+				"/api/models",
+				expect.anything(),
+			),
 		);
-		expect(globalThis.fetch).toHaveBeenCalledWith("/api/");
+		window.history.pushState({}, "", "/");
 	});
 });

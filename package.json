@@ -1,8 +1,8 @@
 {
-	"name": "vite-react-template",
-	"description": "A template for building a React application with Vite, Hono, and Cloudflare Workers",
+	"name": "ai-gateway-edge",
+	"description": "AI Gateway running on Cloudflare Workers: React + Hono proxy to Google AI Studio with the API key kept private in the backend",
 	"cloudflare": {
-		"label": "Vite React Template",
+		"label": "AI Gateway Edge",
 		"products": [
 			"Workers"
 		],
@@ -14,7 +14,8 @@
 	"dependencies": {
 		"hono": "4.11.1",
 		"react": "19.2.1",
-		"react-dom": "19.2.1"
+		"react-dom": "19.2.1",
+		"react-router-dom": "^7.17.0"
 	},
 	"devDependencies": {
 		"@cloudflare/vite-plugin": "1.15.3",
